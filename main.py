@@ -82,6 +82,9 @@ for col in df.columns:
     elif "What advice would you give future students" in col:
         rename_dict[col] = "Student_Advice"
 
+    elif "Which AI tool do you use most often" in col:
+        rename_dict[col] = "AI_Tool"
+
 # Rename columns
 df = df.rename(columns=rename_dict)
 
@@ -568,25 +571,25 @@ print("\n===== CONFIDENCE BY SOCIAL MEDIA HOURS =====")
 print(confidence_by_sm)
 
 # =========================================================
-# PLATFORM VS AI INFLUENCE
+# AI TOOLS VS AI INFLUENCE
 # =========================================================
 
-platform_ai = df.groupby(
-    'Education_Platform'
+ai_tool_influence = df.groupby(
+    'AI_Tool'
 )['AI_Influence'].mean()
 
 plt.figure(figsize=(8,5))
 
 plt.bar(
-    platform_ai.index,
-    platform_ai.values
+    ai_tool_influence.index,
+    ai_tool_influence.values
 )
 
 plt.xticks(rotation=45)
 
 plt.ylabel('Average AI Influence')
 
-plt.title('AI Influence Across Platforms')
+plt.title('AI Influence Across AI Tools')
 
 plt.grid(axis='y')
 
@@ -781,19 +784,14 @@ plt.title('Preferred Educational Platforms')
 
 plt.show()
 
-# =========================================================
-# SAVE UPDATED DATA
-# =========================================================
-
 df.to_csv(
     'cleaned_analysis.csv',
     index=False
 )
 
-print("\n===== FULL ANALYSIS COMPLETED =====")
 
 # =========================================================
-# EXTRA VISUALIZATION 1: PAIRPLOT
+#  PAIRPLOT
 # =========================================================
 
 sns.pairplot(df[[
@@ -892,7 +890,7 @@ plt.figure(figsize=(7,6))
 plt.scatter(
     X_pca[:, 0],
     X_pca[:, 1],
-    c=cluster_data['Cluster'],   # ✅ FIX HERE
+    c=cluster_data['Cluster'],
     cmap='viridis'
 )
 
