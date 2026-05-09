@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,6 +17,48 @@ import statsmodels.api as sm
 
 from sklearn.feature_extraction.text import CountVectorizer
 
+
+#=====================================================
+# Exporting Figure of Plot show
+#======================================================
+
+os.makedirs("figures", exist_ok=True)
+
+figure_counter = 1
+
+original_show = plt.show
+
+def custom_show(*args, **kwargs):
+
+    global figure_counter
+
+
+    title = plt.gca().get_title()
+
+
+    if not title:
+        title = f"figure_{figure_counter}"
+
+
+    filename = title.replace(" ", "_")
+
+
+    plt.savefig(
+        f"figures/{figure_counter}_{filename}.png",
+        dpi=300,
+        bbox_inches='tight'
+    )
+
+    print(f"Saved figure: {filename}")
+
+    figure_counter += 1
+
+    original_show(*args, **kwargs)
+
+plt.show = custom_show
+
+
+# =========================================================
 
 file_path = "Response.xlsx"
 
@@ -90,6 +133,8 @@ df = df.rename(columns=rename_dict)
 
 print("\n===== RENAMED COLUMNS =====")
 print(df.columns)
+
+os.makedirs('figures', exist_ok=True)
 
 # =========================================================
 #  CLEAN & MAP SOCIAL MEDIA HOURS
@@ -215,7 +260,11 @@ plt.title('AI vs Social Media Influence')
 plt.ylabel('Mean Score')
 
 plt.grid(axis='y')
-
+plt.savefig(
+    'figures/ai_vs_social_media.png',
+    dpi=300,
+    bbox_inches='tight',
+)
 plt.show()
 
 print("\n===== MEAN SCORES =====")
@@ -258,6 +307,11 @@ for i in range(len(corr_vars)):
 plt.title('Correlation Matrix')
 
 plt.tight_layout()
+# plt.savefig(
+#     'figures/correlation_analysis.png',
+#     dpi=300,
+#     bbox_inches='tight',
+# )
 
 plt.show()
 
